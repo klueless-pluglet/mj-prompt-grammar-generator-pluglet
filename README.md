@@ -1,12 +1,10 @@
-# ChatGPT Retrieval Plugin
-
-> **Join the [ChatGPT plugins waitlist here](https://openai.com/waitlist/plugins)!**
-
-Find an example video of a Retrieval Plugin that has access to the UN Annual Reports from 2018 to 2022 [here](https://cdn.openai.com/chat-plugins/retrieval-gh-repo-readme/Retrieval-Final.mp4).
+# Midjourney prompt grammar generator - GTP-plugin
 
 ## Introduction
 
-The ChatGPT Retrieval Plugin repository provides a flexible solution for semantic search and retrieval of personal or organizational documents using natural language queries. The repository is organized into several directories:
+~~The ChatGPT Retrieval Plugin repository provides a flexible solution for semantic search and retrieval of personal or organizational documents using natural language queries. The repository is organized into several directories:~~
+
+**Midjourney prompt grammar generator plugin**: Reverse engineer any Midjourney prompt into tokenized variables that help to build new repeatable prompts
 
 | Directory                     | Description                                                                                                                |
 | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
