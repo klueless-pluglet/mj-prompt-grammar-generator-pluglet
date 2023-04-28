@@ -1,17 +1,10 @@
-# Import operating system functions
 import os
-# Import type hints for better code readability and type checking
 from typing import Optional
-# Import the Uvicorn ASGI server to run the FastAPI app
 import uvicorn
-# Import FastAPI for creating APIs, handling file uploads, and managing dependencies
 from fastapi import FastAPI, File, Form, HTTPException, Depends, Body, UploadFile
-# Import for handling authentication
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-# Import for serving static files (e.g., images, CSS, etc.)
 from fastapi.staticfiles import StaticFiles
 
-# Import the request and response models
 from models.api import (
     DeleteRequest,
     DeleteResponse,
@@ -20,23 +13,22 @@ from models.api import (
     UpsertRequest,
     UpsertResponse,
 )
-
 from datastore.factory import get_datastore
 from services.file import get_document_from_file
+
 from models.models import DocumentMetadata, Source
 
-# Get the BEARER_TOKEN (for what?)
 bearer_scheme = HTTPBearer()
 BEARER_TOKEN = os.environ.get("BEARER_TOKEN")
 assert BEARER_TOKEN is not None
 
-# Function to validate the token
+
 def validate_token(credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme)):
     if credentials.scheme != "Bearer" or credentials.credentials != BEARER_TOKEN:
         raise HTTPException(status_code=401, detail="Invalid or missing token")
     return credentials
 
-# Instantiate the FastAPI app with the validate_token dependency
+
 app = FastAPI(dependencies=[Depends(validate_token)])
 app.mount("/.well-known", StaticFiles(directory=".well-known"), name="static")
 
@@ -50,7 +42,7 @@ sub_app = FastAPI(
 )
 app.mount("/sub", sub_app)
 
-# Upsert-file endpoint
+
 @app.post(
     "/upsert-file",
     response_model=UpsertResponse,
@@ -77,7 +69,7 @@ async def upsert_file(
         print("Error:", e)
         raise HTTPException(status_code=500, detail=f"str({e})")
 
-# Upsert endpoint
+
 @app.post(
     "/upsert",
     response_model=UpsertResponse,
@@ -92,7 +84,7 @@ async def upsert(
         print("Error:", e)
         raise HTTPException(status_code=500, detail="Internal Service Error")
 
-# Query endpoint for the main app
+
 @app.post(
     "/query",
     response_model=QueryResponse,
@@ -109,7 +101,7 @@ async def query_main(
         print("Error:", e)
         raise HTTPException(status_code=500, detail="Internal Service Error")
 
-# Query endpoint for the sub-application
+
 @sub_app.post(
     "/query",
     response_model=QueryResponse,
@@ -128,7 +120,7 @@ async def query(
         print("Error:", e)
         raise HTTPException(status_code=500, detail="Internal Service Error")
 
-# Delete endpoint
+
 @app.delete(
     "/delete",
     response_model=DeleteResponse,
@@ -152,7 +144,7 @@ async def delete(
         print("Error:", e)
         raise HTTPException(status_code=500, detail="Internal Service Error")
 
-# Event handler for the app startup event
+
 @app.on_event("startup")
 async def startup():
     global datastore
